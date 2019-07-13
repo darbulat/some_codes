@@ -5,7 +5,8 @@ from pytz import UTC
 
 from db.models import User, Blog, Topic
 
-#TODO
+
+# TODO
 # Создать пользователя first_name = u1, last_name = u1.
 # Создать пользователя first_name = u2, last_name = u2.
 # Создать пользователя first_name = u3, last_name = u3.
@@ -52,30 +53,57 @@ def create():
 
 
 def edit_all():
-    pass
+    for i in User.objects.all():
+        i.first_name = 'uu1'
+        i.save()
 
+
+# TODO
+# Поменять first_name на uu1 у пользователей, у которых first_name u1 или u2 (функция edit_u1_u2).
 def edit_u1_u2():
-    pass
+    for i in User.objects.filter(Q(first_name='u1') | Q(first_name='u2')):
+        i.first_name = 'uu1'
+        i.save()
 
+
+#TODO
+# удалить пользователя с first_name u1 (функция delete_u1).
+# отписать пользователя с first_name u2 от блогов (функция unsubscribe_u2_from_blogs).
 
 def delete_u1():
-    pass
+    User.objects.filter(first_name='u1').delete()
 
 
 def unsubscribe_u2_from_blogs():
-    pass
+    u2 = User.objects.filter(first_name='u2')
+    b2 = Blog.objects.filter(subscribers__first_name='u2')
+    for u in u2:
+        for b in b2:
+            b.subscribers.remove(u)
+
+#TODO
+# 4. Найти топики у которых дата создания больше 2018-01-01 (функция get_topic_created_grated).
+# 5. Найти топик у которого title заканчивается на content (функция get_topic_title_ended).
+# 6. Получить 2х первых пользователей (сортировка в обратном порядке по id) (функция get_user_with_limit).
+# 7. Получить количество топиков в каждом блоге, назвать поле topic_count, отсортировать по topic_count по возрастанию (функция get_topic_count).
+# 8. Получить среднее количество топиков в блоге (функция get_avg_topic_count).
+# 9. Найти блоги, в которых топиков больше одного (функция get_blog_that_have_more_than_one_topic).
+# 10. Получить все топики автора с first_name u1 (функция get_topic_by_u1).
+# 11. Найти пользователей, у которых нет блогов, отсортировать по возрастанию id (функция get_user_that_dont_have_blog).
+# 12. Найти топик, который лайкнули все пользователи (функция get_topic_that_like_all_users).
+# 13. Найти топики, у которы нет лайков (функция get_topic_that_dont_have_like)
 
 
 def get_topic_created_grated():
-    pass
+    return Topic.objects.filter(created__gte='2018-01-01')
 
 
 def get_topic_title_ended():
-    pass
+    return Topic.objects.filter(title__endswith='content')
 
 
 def get_user_with_limit():
-    pass
+    return User.objects.all().order_by('-pk')[:2]
 
 
 def get_topic_count():
